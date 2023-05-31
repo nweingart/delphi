@@ -1,1 +1,1 @@
-# dailywisdom
+# delphi
