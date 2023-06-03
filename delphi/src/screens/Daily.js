@@ -1,0 +1,132 @@
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { auth, db } from '../firebase/Firebase'
+
+import Card from '../ui/Card';
+
+const data = {
+  "source": "Critique of Pure Reason",
+  "author": "Immanuel Kant",
+  "category": "Philosophy",
+  "quote": "Concepts without intuitions are empty, intuitions without concepts are blind.",
+  "tags": ["Epistemology", "Metaphysics", "Ethics"],
+  "yearReleased": 1781
+}
+
+
+const { width, height } = Dimensions.get('window');
+
+const DailyPage = () => {
+  const [userData, setUserData] = useState([])
+  const [journalEntry, setJournalEntry] = useState('');
+  const [isEditing, setIsEditing] = useState(true);
+  const [timeOfDay, setTimeOfDay] = useState('')
+  const email = auth.currentUser.email
+  const user = auth.currentUser
+
+
+  const handleSave = () => {
+    if (isEditing) {
+      console.log('Saved entry:', journalEntry);
+    }
+    setIsEditing(!isEditing); // toggle the isEditing state
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const q = query(collection(db, "users"), where("email", "==", email))
+      const querySnapshot = await getDocs(q)
+      setUserData(querySnapshot.docs.map(doc => doc.data()))
+    }
+    fetchData()
+  }, [])
+
+  useEffect(() => {
+    const currentDate = new Date()
+    const currentHour = currentDate.getHours()
+    if (currentHour >= 12 && currentHour < 17) {
+      setTimeOfDay('Afternoon')
+    } else if (currentHour >= 17 && currentHour < 24) {
+      setTimeOfDay('Evening')
+    } else {
+      setTimeOfDay('Morning')
+    }
+  }, [])
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Daily</Text>
+      <Card data={data} />
+      <View style={styles.contentContainer}>
+        <Text style={styles.quote}>{data.quote}</Text>
+        <TextInput
+          style={[styles.input, !isEditing && styles.disabled]} // apply disabled styles conditionally
+          multiline
+          onChangeText={setJournalEntry}
+          value={journalEntry}
+          placeholder="Write your journal entry here..."
+          editable={isEditing} // enable editing when isEditing is true
+        />
+        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+          <Text style={styles.saveButtonText}>{isEditing ? 'Save Entry' : 'Edit Entry'}</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F2F2F2',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    fontFamily: 'Times New Roman',
+    marginBottom: 20,
+  },
+  contentContainer: {
+    alignItems: 'center',
+  },
+  quote: {
+    fontSize: 18,
+    fontFamily: 'Times New Roman',
+    marginBottom: 20,
+  },
+  input: {
+    width: width * 0.9,
+    height: height / 6, // smaller height
+    borderColor: '#C56E3F',
+    borderWidth: 1,
+    borderRadius: 6,
+    padding: 10,
+    marginVertical: 10,
+    fontFamily: 'Times New Roman',
+    fontSize: 18,
+    textAlignVertical: 'top', // align text to the top on Android
+  },
+  disabled: {
+    backgroundColor: '#D3D3D3', // grayed-out background color
+  },
+  saveButton: {
+    width: width * 0.5,
+    height: 50,
+    backgroundColor: '#C56E3F',
+    borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  saveButtonText: {
+    color: '#FFFFFF',
+    fontFamily: 'Times New Roman',
+    fontSize: 18,
+  },
+});
+
+export default DailyPage;
+
