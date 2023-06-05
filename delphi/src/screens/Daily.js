@@ -18,12 +18,8 @@ const data = {
 const { width, height } = Dimensions.get('window');
 
 const DailyPage = () => {
-  const [userData, setUserData] = useState([])
   const [journalEntry, setJournalEntry] = useState('');
   const [isEditing, setIsEditing] = useState(true);
-  const [timeOfDay, setTimeOfDay] = useState('')
-  const email = auth.currentUser.email
-  const user = auth.currentUser
 
 
   const handleSave = () => {
@@ -33,33 +29,12 @@ const DailyPage = () => {
     setIsEditing(!isEditing); // toggle the isEditing state
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const q = query(collection(db, "users"), where("email", "==", email))
-      const querySnapshot = await getDocs(q)
-      setUserData(querySnapshot.docs.map(doc => doc.data()))
-    }
-    fetchData()
-  }, [])
-
-  useEffect(() => {
-    const currentDate = new Date()
-    const currentHour = currentDate.getHours()
-    if (currentHour >= 12 && currentHour < 17) {
-      setTimeOfDay('Afternoon')
-    } else if (currentHour >= 17 && currentHour < 24) {
-      setTimeOfDay('Evening')
-    } else {
-      setTimeOfDay('Morning')
-    }
-  }, [])
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Daily</Text>
       <Card data={data} />
       <View style={styles.contentContainer}>
-        <Text style={styles.quote}>{data.quote}</Text>
         <TextInput
           style={[styles.input, !isEditing && styles.disabled]} // apply disabled styles conditionally
           multiline

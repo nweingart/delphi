@@ -10,6 +10,7 @@ import Register from './src/screens/Register'
 import Login from './src/screens/Login'
 import Explore from './src/screens/Explore'
 import Daily from './src/screens/Daily'
+import ContentUploader from "./src/screens/ContentUploader";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 
@@ -19,6 +20,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+
 
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -52,7 +54,12 @@ const App = () => {
             tabBarLabel: '',
             tabBarIcon: () => (
             <Ionicons name="search-outline" size={24} color="black" />)}}
-          />
+          /><Tab.Screen name ="Upload" component={ContentUploader} options={{
+            headerShown: false,
+            tabBarLabel: '',
+          tabBarIcon: () => (
+            <Ionicons name="cloud-upload-outline" size={24} color="black" />)
+        }}/>
         </Tab.Navigator>
       </NavigationContainer>
     </Provider>
