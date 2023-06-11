@@ -1,8 +1,8 @@
 import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import { db } from '../firebase/Firebase'
+import { db } from '../../firebase/Firebase'
 import {collection, addDoc} from 'firebase/firestore'
-import { contentData } from "../data";
+import { contentData } from "../../data";
 
 const ContentUploader = () => {
 

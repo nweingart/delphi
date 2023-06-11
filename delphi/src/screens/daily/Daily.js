@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { collection, query, where, getDocs } from "firebase/firestore";
-import { auth, db } from '../firebase/Firebase'
+import { auth, db } from '../../firebase/Firebase'
 
-import Card from '../ui/Card';
+import Card from '../../ui/Card';
 
 const data = {
-  "source": "Critique of Pure Reason",
-  "author": "Immanuel Kant",
-  "category": "Philosophy",
-  "quote": "Concepts without intuitions are empty, intuitions without concepts are blind.",
-  "tags": ["Epistemology", "Metaphysics", "Ethics"],
-  "yearReleased": 1781
+  "source": 'Meditations',
+  "author": 'Marcus Aurelius',
+  "category": 'Philosophy',
+  "quote": 'You have power over your mind - not outside events. Realize this, and you will find strength.',
+  "tags": ['Stoicism', 'Self-Reflection', 'Wisdom'],
+  "year": '180 AD',
 }
 
 

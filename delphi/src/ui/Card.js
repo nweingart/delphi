@@ -1,15 +1,37 @@
-import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import Ionicons from "@expo/vector-icons/Ionicons";
+
 
 const { width, height } = Dimensions.get('window');
 
 const Card = ({ data }) => {
+  const [like, setLike] = useState(false);
+  const [dislike, setDislike] = useState(false);
+
+  const handleLike = () => {
+    if (like) {
+      setLike(false);
+    } else {
+      setLike(true);
+      setDislike(false);
+    }
+  };
+
+  const handleDislike = () => {
+    if (dislike) {
+      setDislike(false);
+    } else {
+      setDislike(true);
+      setLike(false);
+    }
+  };
+
   return (
     <View style={styles.card}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>{data.source}</Text>
-          <Text style={styles.year}>{data.yearReleased}</Text>
+          <Text style={styles.year}>{data.year}</Text>
         </View>
         <Text style={styles.quote}>{`"${data.quote}"`}</Text>
         <Text style={styles.author}>{data.author}</Text>
@@ -18,6 +40,14 @@ const Card = ({ data }) => {
             <Text key={index} style={styles.tag}>{tag}</Text>
           ))}
         </View>
+        <View style={styles.buttons}>
+          <TouchableOpacity onPress={handleLike}>
+            <Ionicons name="thumbs-up" size={24} color={like ? "#556B2F" : "gray"} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleDislike}>
+            <Ionicons name="thumbs-down" size={24} color={dislike ? "#8B0000" : "gray"} />
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -25,8 +55,8 @@ const Card = ({ data }) => {
 
 const styles = StyleSheet.create({
   card: {
-    width: width * 0.9,
-    height: height / 3,
+    width: width * 0.85, // less wide
+    height: height / 3.5, // less tall
     borderRadius: 6,
     elevation: 3,
     backgroundColor: '#F2F2F2',
@@ -36,7 +66,7 @@ const styles = StyleSheet.create({
     shadowColor: '#333',
     shadowOpacity: 0.3,
     shadowRadius: 2,
-    marginHorizontal: width * 0.05,
+    marginHorizontal: width * 0.075, // adjusting margin to keep card centered
     marginVertical: 6,
     padding: 10,
     justifyContent: 'space-between',
@@ -88,6 +118,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#000',
     margin: 2,
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 10,
   },
 });
 

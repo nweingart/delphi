@@ -1,33 +1,16 @@
-import React, { useState, useEffect } from 'react'
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
-import { auth, db } from '../firebase/Firebase'
-import {createUserWithEmailAndPassword} from 'firebase/auth'
+import React from 'react'
+import {Image, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View,} from 'react-native'
+import { auth } from '../../firebase/Firebase'
 import { useNavigation } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
-import { setDoc, doc } from "firebase/firestore";
+import { signInWithEmailAndPassword } from 'firebase/auth'
 
-
-const Register = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [userFirstName, setUserFirstName] = useState('')
+const Login = () => {
+  const [email, setEmail] = React.useState('')
+  const [password, setPassword] = React.useState('')
 
   const navigation = useNavigation()
 
-  const handleRegister = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(userCredentials => {
-        const user = userCredentials.user
-        console.log(`logged in with email ${user.email}`)
-        setDoc(doc(db, "users", email), {
-          email: email,
-          firstName: userFirstName,
-        })
-      })
-      .catch(error => alert(error.message))
-  }
-
-  useEffect(() => {
+  React.useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
         navigation.navigate("Daily")
@@ -37,11 +20,23 @@ const Register = () => {
   }, [])
 
   const handleLogin = () => {
-    navigation.navigate("Login")
+    signInWithEmailAndPassword(auth, email, password)
+      .then(userCredentials => {
+        const user = userCredentials.user
+        console.log(`logged in with email ${user.email}`)
+      })
+      .catch(error => alert(error.message))
   }
+
+  const handleRegister = () => {
+    navigation.navigate("Register")
+  }
+
+
 
   return (
     <KeyboardAvoidingView
+      platform="ios"
       style={styles.container}
       behavior="padding"
     >
@@ -63,24 +58,18 @@ const Register = () => {
           style={styles.input}
           secureTextEntry={true}
         />
-        <TextInput
-          placeholder="first name"
-          value={userFirstName}
-          onChangeText={text => setUserFirstName(text)}
-          style={styles.input}
-        />
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          onPress={handleRegister}
+          onPress={handleLogin}
           style={styles.button}
         >
-          <Text style={styles.buttonText}>Register</Text>
+          <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.register}>
-        <Text style={{ ...styles.bottomText, color: '#C56E3F'}} onPress={handleLogin}>
-          Already have an account? Login here
+        <Text style={{...styles.bottomText, fontFamily: 'Georgia', color: '#C56E3F', fontSize: 12 }} onPress={handleRegister}>
+          New to Delphi? Tap here to sign up
         </Text>
       </View>
     </KeyboardAvoidingView>
@@ -105,10 +94,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingHorizontal: 15,
     paddingVertical: 10,
-    borderRadius: 5,
+    borderRadius: 10,
     marginTop: 5,
-    borderWidth: 1,
-    borderColor: '#D3D3D3',
     fontFamily: 'Georgia',
   },
   buttonContainer: {
@@ -139,12 +126,14 @@ const styles = StyleSheet.create({
   },
   register: {
     marginTop: 50,
+    color: '#C56E3F',
+    fontSize: 12,
+
   },
   bottomText: {
     fontWeight: '700',
-    fontSize: 12,
     fontFamily: 'Georgia',
   }
 })
 
-export default Register
+export default Login

@@ -1,8 +1,8 @@
 import React from 'react'
 import { View, FlatList, StyleSheet } from 'react-native'
-import Card from '../ui/Card'
+import Card from '../../ui/Card'
 
-const ExploreScreen = () => {
+const Quotes = () => {
   const data = [
     {
       source: 'Meditations',
@@ -116,4 +116,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default ExploreScreen
+export default Quotes
